@@ -18,7 +18,7 @@ const PostText = styled.Text`
 const PostTitle = styled.Text`
   font-size: 24px;
   /* margin-bottom:5px; */
-  font-weight:700;
+  font-weight: 700;
 `;
 
 export const FullPostScreen = ({ route, navigation }) => {
@@ -26,16 +26,12 @@ export const FullPostScreen = ({ route, navigation }) => {
   const { title, firstName, lastName, imageUrl, createdAt, age } = route.params;
   const [isLoading, setIsLoading] = React.useState(true);
 
-
-
-
   React.useEffect(() => {
     //в заголовок идет имя человека чью анкету открыли
     navigation.setOptions({
-      title:firstName,
+      title: firstName + ` card`,
     });
   }, []);
- 
 
   if (false) {
     return (
@@ -51,8 +47,10 @@ export const FullPostScreen = ({ route, navigation }) => {
           uri: imageUrl,
         }}
       />
-      <PostTitle>{title}. {firstName} {lastName}.{'\n'}
-      Birthday: {createdAt} {'\n'}</PostTitle> 
+      <PostTitle>
+        {title}. {firstName} {lastName}.{'\n'}
+        Birthday: {createdAt} {'\n'}
+      </PostTitle>
       <PostText>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus eos
         rerum nisi quisquam in beatae. Rem maiores natus tenetur, quo ut ab?
