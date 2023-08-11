@@ -3,7 +3,7 @@ import { WebView } from 'react-native-webview';
 const WebViewScreen = () => {
   return (
     <WebView
-      source={{ uri: 'https://www.facebook.com' }} // Замените на нужный URL
+      source={{ uri: 'https://zorbleizzle.com' }} // Замените на нужный URL
       style={{ flex: 1 }} // Обязательно укажите, чтобы WebView занимал весь экран
     />
   );
