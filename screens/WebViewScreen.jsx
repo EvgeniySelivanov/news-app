@@ -4,7 +4,9 @@ const WebViewScreen = () => {
   return (
     <WebView
       source={{ uri: 'https://zorbleizzle.com' }} // Замените на нужный URL
-      style={{ flex: 1 }} // Обязательно укажите, чтобы WebView занимал весь экран
+      style={{ flex: 1 }} 
+      javaScriptEnabled={true} // Разрешить выполнение JavaScript
+      sharedCookiesEnabled={true} // (только для iOS) Разрешить совместное использование куков с Safari
     />
   );
 }
