@@ -9,7 +9,7 @@ const Goalkeeper = ({ onValueChange }) => {
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (event, gesture) => {
       onValueChange(gesture.moveX);
-      if(gesture.moveX>=110&&gesture.moveX<=230)
+      if(gesture.moveX>=110&&gesture.moveX<=240)
       setPosition({
         x: gesture.moveX,
       });
