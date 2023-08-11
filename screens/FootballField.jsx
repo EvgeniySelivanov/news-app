@@ -27,13 +27,10 @@ const initialGameState = {
   score: 0,
   game: true,
   xGoalkeeperPosition: 175,
+  durationSpeed: 2500,
 };
 export const FootballField = () => {
   const [dataGame, setGame] = useState(initialGameState);
-  useEffect(() => {
-    // Выполнение вашей функции после рендера компонента
-    checkReboundBall(); // Пример: загрузка данных
-  }, []);
 
   const goalkeeperValueChange = (value) => {
     setGame((dataGame) => ({ ...dataGame, xGoalkeeperPosition: value }));
@@ -42,11 +39,17 @@ export const FootballField = () => {
   const ballPosition = useRef(new Animated.ValueXY({ x: 178, y: 350 })).current;
 
   const moveBallToGoal = () => {
-    setGame((dataGame) => ({ ...dataGame, game: true }));
+    setGame((dataGame) => ({ ...dataGame, game: initialGameState.game }));
+    if (dataGame.durationSpeed >= 300) {
+      setGame((dataGame) => ({
+        ...dataGame,
+        durationSpeed: dataGame.durationSpeed - 50,
+      }));
+    }
     ballPosition.setValue({ x: 178, y: 350 });
     Animated.timing(ballPosition, {
       toValue: { x: Math.floor(Math.random() * (230 - 110 + 1)) + 110, y: 650 }, // Координаты ворот
-      duration: 2500,
+      duration: dataGame.durationSpeed,
       useNativeDriver: false,
     }).start();
   };
@@ -55,15 +58,21 @@ export const FootballField = () => {
     setGame((dataGame) => ({ ...dataGame, score: dataGame.score + 1 }));
   };
   const checkDontReboundBall = () => {
-    setGame((dataGame) => ({ ...dataGame, score: 0, game: false }));
+    setGame((dataGame) => ({
+      ...dataGame,
+      score: initialGameState.score,
+      durationSpeed: initialGameState.durationSpeed,
+      game: false,
+      
+    }));
   };
   const ballX = ballPosition.x._value; // Получаем текущие координаты мяча по X
   const ballY = ballPosition.y._value; // Получаем текущие координаты мяча по Y
-  const ballWidth = 30;
+  const ballWidth = 30; //диаметр шара
   const ballHeight = 30;
   const blockX = dataGame.xGoalkeeperPosition; /*X координаты другого блока */
-  const blockY = 590;
-  const blockWidth = 50;
+  const blockY = 590; //координата вратаря
+  const blockWidth = 50; //габарит вратаря
   const blockHeight = 50;
 
   if (
@@ -110,12 +119,15 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: 'white',
+    backgroundColor:  "white",
   },
   button: {
     position: 'absolute',
+    top:90,
+    left:20,
     backgroundColor: 'black',
     padding: 20,
+    borderRadius:15,
   },
   buttonText: {
     color: 'white',
