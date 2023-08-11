@@ -1,5 +1,11 @@
-import React, { useRef,useState,useEffect } from 'react';
-import { View,Text,StyleSheet,  TouchableOpacity, Animated } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import styled from 'styled-components/native';
 import { ImageBackground } from 'react-native';
 import Goalkeeper from '../components/Goalkeeper';
@@ -7,61 +13,70 @@ import Goalkeeper from '../components/Goalkeeper';
 const Field = styled(ImageBackground)`
   flex: 1;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 `;
 const StyledText = styled.Text`
   position: absolute;
-  top: 400;
+  top: 100px;
   left: 5px;
   color: #f6ff00;
   font-size: 50px;
   font-weight: 700;
 `;
-
+const initialGameState = {
+  score: 0,
+  game: true,
+  xGoalkeeperPosition: 175,
+};
 export const FootballField = () => {
-  let gameState=true;
-  const [childValue, setChildValue] = useState('');
-  
- 
+  const [dataGame, setGame] = useState(initialGameState);
+  useEffect(() => {
+    // Выполнение вашей функции после рендера компонента
+    checkReboundBall(); // Пример: загрузка данных
+  }, []);
 
-  const handleChildValueChange = (value) => {
-    setChildValue(value);
+  const goalkeeperValueChange = (value) => {
+    setGame((dataGame) => ({ ...dataGame, xGoalkeeperPosition: value }));
   };
 
-  
-  const ballPosition = useRef(new Animated.ValueXY({ x: 180, y: 300 })).current;
+  const ballPosition = useRef(new Animated.ValueXY({ x: 178, y: 350 })).current;
 
   const moveBallToGoal = () => {
-    gameState=true;
-    ballPosition.setValue({ x: 180, y: 300 });
+    setGame((dataGame) => ({ ...dataGame, game: true }));
+    ballPosition.setValue({ x: 178, y: 350 });
     Animated.timing(ballPosition, {
-      toValue: { x: Math.floor(Math.random() * (230 - 110 + 1)) + 110, y: 30 }, // Координаты ворот
+      toValue: { x: Math.floor(Math.random() * (230 - 110 + 1)) + 110, y: 650 }, // Координаты ворот
       duration: 2500,
       useNativeDriver: false,
     }).start();
-   
+  };
+
+  const checkReboundBall = () => {
+    setGame((dataGame) => ({ ...dataGame, score: dataGame.score + 1 }));
+  };
+  const checkDontReboundBall = () => {
+    setGame((dataGame) => ({ ...dataGame, score: 0, game: false }));
   };
   const ballX = ballPosition.x._value; // Получаем текущие координаты мяча по X
   const ballY = ballPosition.y._value; // Получаем текущие координаты мяча по Y
   const ballWidth = 30;
-  const ballHeight =30;
-  const blockX =childValue  /*X координаты другого блока */;
-  const blockY = 68;
+  const ballHeight = 30;
+  const blockX = dataGame.xGoalkeeperPosition; /*X координаты другого блока */
+  const blockY = 590;
   const blockWidth = 50;
   const blockHeight = 50;
-if( ballX >= blockX &&
-  ballX <= blockX + blockWidth &&
-  ballY >= blockY &&
-  ballY <= blockY + blockHeight){
-    score+=1;
+
+  if (
+    ballX >= blockX - ballWidth &&
+    ballX <= blockX + blockWidth &&
+    ballY >= blockY - ballWidth &&
+    ballY <= blockY + blockHeight
+  ) {
+    checkReboundBall();
     moveBallToGoal();
-  }else if(
-    ballY + ballHeight < blockY  
-  ){
-    score=0;
-    gameState=false;
-    
-   
+  } else if (ballY > blockY + blockHeight) {
+    ballPosition.setValue({ x: 178, y: 350 });
+    checkDontReboundBall();
   }
 
   return (
@@ -71,45 +86,44 @@ if( ballX >= blockX &&
       }}
       resizeMode="cover"
     >
-      <Animated.View style={[styles.ball, ballPosition.getLayout()]} />
       <TouchableOpacity onPress={moveBallToGoal}>
         <View style={styles.button}>
-          {gameState?<Text style={styles.buttonText}>Start game</Text>:<Text style={styles.buttonGameOver}>Game Over {`\n`}Press to start</Text>}
+          {dataGame.game ? (
+            <Text style={styles.buttonText}>Start game</Text>
+          ) : (
+            <Text style={styles.buttonGameOver}>
+              Game Over {`\n`}Press to start
+            </Text>
+          )}
         </View>
       </TouchableOpacity>
-      <Goalkeeper onValueChange={handleChildValueChange}/>
-      <StyledText>Score:{score}</StyledText>
+      <Goalkeeper xValueChange={goalkeeperValueChange} />
+      <StyledText>Score:{dataGame.score}</StyledText>
+      <Animated.View style={[styles.ball, ballPosition.getLayout()]} />
     </Field>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   ball: {
-    position:'absolute',
+    position: 'absolute',
     width: 30,
     height: 30,
     borderRadius: 15,
     backgroundColor: 'white',
   },
   button: {
-    // position:'absolute',
-    // left:-45,
-    // top:60,
-    marginTop: 20,
+    position: 'absolute',
     backgroundColor: 'black',
-    padding: 10,
+    padding: 20,
   },
   buttonText: {
     color: 'white',
   },
   buttonGameOver: {
+    textAlign: 'center',
     color: 'white',
-    fontSize:20,
-    color:'red',
+    fontSize: 20,
+    color: 'red',
   },
 });
