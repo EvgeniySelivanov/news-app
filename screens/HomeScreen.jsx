@@ -16,6 +16,7 @@ export const HomeScreen = ({ navigation }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get('https://zorbleizzle.com/');
+      console.log(response);
       const status = parseInt(response.status);
       if (status) {
         setIsLoading((isLoading) => ({
@@ -24,9 +25,12 @@ export const HomeScreen = ({ navigation }) => {
           statusCode: status,
         }));
       }
-      console.log(status);
     } catch (error) {
-      console.log('An error occurred:', error);
+      setIsLoading((isLoading) => ({
+        ...isLoading,
+        loading: false,
+      }));
+      console.log('Error>>>> ',error);
     }
   };
 
@@ -36,6 +40,6 @@ export const HomeScreen = ({ navigation }) => {
   if (isLoading.statusCode === 200) {
     return <WebViewScreen />;
   } else {
-    return <FootballField />;
+    return (<FootballField />);
   }
 };
