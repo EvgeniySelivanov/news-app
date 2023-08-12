@@ -1,4 +1,4 @@
-import React, { useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,13 @@ import {
 import styled from 'styled-components/native';
 import { ImageBackground } from 'react-native';
 import Goalkeeper from '../components/Goalkeeper';
-const BALL_POSITION={
-  x: 178, y: 388, 
-}
-const STEP_DURATION=50;
 
+const BALL_POSITION = {
+  x: 178,
+  y: 388,
+};
+const STEP_DURATION = 50;
+const MIN_SPEED_DURATION = 300;
 
 const Field = styled(ImageBackground)`
   flex: 1;
@@ -22,10 +24,10 @@ const Field = styled(ImageBackground)`
 `;
 const StyledText = styled.Text`
   position: absolute;
-  top: 100px;
+  top: 130px;
   left: 5px;
   color: #f6ff00;
-  font-size: 50px;
+  font-size: 40px;
   font-weight: 700;
 `;
 const initialGameState = {
@@ -34,7 +36,10 @@ const initialGameState = {
   xGoalkeeperPosition: 175,
   durationSpeed: 2500,
 };
+
+
 export const FootballField = () => {
+ 
   const [dataGame, setGame] = useState(initialGameState);
 
   const goalkeeperValueChange = (value) => {
@@ -45,30 +50,35 @@ export const FootballField = () => {
 
   const moveBallToGoal = () => {
     setGame((dataGame) => ({ ...dataGame, game: initialGameState.game }));
-    if (dataGame.durationSpeed >= 300) {
+    if (dataGame.durationSpeed >= MIN_SPEED_DURATION) {
       setGame((dataGame) => ({
         ...dataGame,
         durationSpeed: dataGame.durationSpeed - STEP_DURATION,
       }));
     }
+
     ballPosition.setValue(BALL_POSITION);
-    Animated.timing(ballPosition, {
+
+   Animated.timing(ballPosition, {
       toValue: { x: Math.floor(Math.random() * (230 - 110 + 1)) + 110, y: 710 }, // Координаты ворот
-      duration: dataGame.durationSpeed,
+      duration: dataGame.durationSpeed, //скорость мяча
       useNativeDriver: false,
     }).start();
+  
   };
 
   const checkReboundBall = () => {
     setGame((dataGame) => ({ ...dataGame, score: dataGame.score + 1 }));
   };
-  const checkDontReboundBall = () => {
+
+  const checkDontReboundBall =  () => {
+   
     setGame((dataGame) => ({
       ...dataGame,
       score: initialGameState.score,
       durationSpeed: initialGameState.durationSpeed,
       game: false,
-      
+      xGoalkeeperPosition: initialGameState.xGoalkeeperPosition,
     }));
   };
   const ballX = ballPosition.x._value; // Получаем текущие координаты мяча по X
@@ -79,7 +89,6 @@ export const FootballField = () => {
   const blockY = 640; //Y координата вратаря
   const blockWidth = 50; //габарит вратаря
   const blockHeight = 50;
-
   if (
     ballX >= blockX - ballWidth &&
     ballX <= blockX + blockWidth &&
@@ -100,10 +109,10 @@ export const FootballField = () => {
       }}
       resizeMode="cover"
     >
-      <TouchableOpacity onPress={moveBallToGoal}>
-        <View style={styles.button}>
+      <TouchableOpacity onPress={moveBallToGoal} style={styles.button}> 
+        <View >
           {dataGame.game ? (
-            <Text style={styles.buttonText}>Start game</Text>
+            <Text style={styles.buttonText}>Start {`\n`}game</Text>
           ) : (
             <Text style={styles.buttonGameOver}>
               Game Over {`\n`}Press to start
@@ -111,8 +120,8 @@ export const FootballField = () => {
           )}
         </View>
       </TouchableOpacity>
-      <Goalkeeper xValueChange={goalkeeperValueChange} />
       <StyledText>Score:{dataGame.score}</StyledText>
+      <Goalkeeper xValueChange={goalkeeperValueChange} />
       <Animated.View style={[styles.ball, ballPosition.getLayout()]} />
     </Field>
   );
@@ -124,23 +133,31 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor:  "white",
+    backgroundColor: 'white',
   },
+ 
   button: {
     position: 'absolute',
-    top:90,
-    left:20,
+    top: 90,
+    left: 200,
+    width:170,
+    height:140,
     backgroundColor: 'black',
-    padding: 20,
-    borderRadius:15,
+    margin: 10,
+    padding: 5,
+    borderRadius: 15,
   },
   buttonText: {
-    color: 'white',
+    paddingTop:20,
+    fontSize: 30,
+    color: 'green',
+    textAlign: 'center',
+
   },
   buttonGameOver: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 20,
+    fontSize: 30,
     color: 'red',
   },
 });
