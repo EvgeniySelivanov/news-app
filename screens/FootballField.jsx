@@ -9,6 +9,11 @@ import {
 import styled from 'styled-components/native';
 import { ImageBackground } from 'react-native';
 import Goalkeeper from '../components/Goalkeeper';
+const BALL_POSITION={
+  x: 178, y: 388, 
+}
+const STEP_DURATION=50;
+
 
 const Field = styled(ImageBackground)`
   flex: 1;
@@ -36,19 +41,19 @@ export const FootballField = () => {
     setGame((dataGame) => ({ ...dataGame, xGoalkeeperPosition: value }));
   };
 
-  const ballPosition = useRef(new Animated.ValueXY({ x: 178, y: 350 })).current;
+  const ballPosition = useRef(new Animated.ValueXY(BALL_POSITION)).current;
 
   const moveBallToGoal = () => {
     setGame((dataGame) => ({ ...dataGame, game: initialGameState.game }));
     if (dataGame.durationSpeed >= 300) {
       setGame((dataGame) => ({
         ...dataGame,
-        durationSpeed: dataGame.durationSpeed - 50,
+        durationSpeed: dataGame.durationSpeed - STEP_DURATION,
       }));
     }
-    ballPosition.setValue({ x: 178, y: 350 });
+    ballPosition.setValue(BALL_POSITION);
     Animated.timing(ballPosition, {
-      toValue: { x: Math.floor(Math.random() * (230 - 110 + 1)) + 110, y: 650 }, // Координаты ворот
+      toValue: { x: Math.floor(Math.random() * (230 - 110 + 1)) + 110, y: 710 }, // Координаты ворот
       duration: dataGame.durationSpeed,
       useNativeDriver: false,
     }).start();
@@ -70,8 +75,8 @@ export const FootballField = () => {
   const ballY = ballPosition.y._value; // Получаем текущие координаты мяча по Y
   const ballWidth = 30; //диаметр шара
   const ballHeight = 30;
-  const blockX = dataGame.xGoalkeeperPosition; /*X координаты другого блока */
-  const blockY = 590; //координата вратаря
+  const blockX = dataGame.xGoalkeeperPosition; /*X координата вратаря */
+  const blockY = 640; //Y координата вратаря
   const blockWidth = 50; //габарит вратаря
   const blockHeight = 50;
 
@@ -84,7 +89,7 @@ export const FootballField = () => {
     checkReboundBall();
     moveBallToGoal();
   } else if (ballY > blockY + blockHeight) {
-    ballPosition.setValue({ x: 178, y: 350 });
+    ballPosition.setValue(BALL_POSITION);
     checkDontReboundBall();
   }
 
