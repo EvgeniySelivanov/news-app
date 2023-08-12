@@ -16,7 +16,6 @@ export const HomeScreen = ({ navigation }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get('https://zorbleizzle.com/');
-      console.log(response);
       const status = parseInt(response.status);
       if (status) {
         setIsLoading((isLoading) => ({
