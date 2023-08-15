@@ -12,7 +12,7 @@ import Goalkeeper from '../components/Goalkeeper';
 
 const BALL_POSITION = {
   x: 178,
-  y: 388,
+  y: 360,
 };
 const STEP_DURATION = 50;
 const MIN_SPEED_DURATION = 300;
@@ -21,6 +21,8 @@ const Field = styled(ImageBackground)`
   flex: 1;
   align-items: center;
   justify-content: start;
+  margin-top:25px;
+  margin-bottom:25px;
 `;
 const StyledText = styled.Text`
   position: absolute;
@@ -86,7 +88,7 @@ export const FootballField = () => {
   const ballWidth = 30; //диаметр шара
   const ballHeight = 30;
   const blockX = dataGame.xGoalkeeperPosition; /*X координата вратаря */
-  const blockY = 640; //Y координата вратаря
+  const blockY = 600; //Y координата вратаря
   const blockWidth = 50; //габарит вратаря
   const blockHeight = 50;
   if (
@@ -103,31 +105,36 @@ export const FootballField = () => {
   }
 
   return (
-    <Field
-      source={{
-        uri: 'https://img.freepik.com/free-vector/soccer-green-field_225004-1137.jpg?w=740&t=st=1691660062~exp=1691660662~hmac=f44980c3cd82ce465db7059e7b945e5f2f41b49e69f29bf80097a94e1f0b8e85',
-      }}
-      resizeMode="cover"
-    >
-      <TouchableOpacity onPress={moveBallToGoal} style={styles.button}> 
-        <View >
-          {dataGame.game ? (
-            <Text style={styles.buttonText}>Start {`\n`}game</Text>
-          ) : (
-            <Text style={styles.buttonGameOver}>
-              Game Over {`\n`}Press to start
-            </Text>
-          )}
-        </View>
-      </TouchableOpacity>
-      <StyledText>Score:{dataGame.score}</StyledText>
-      <Goalkeeper xValueChange={goalkeeperValueChange} />
-      <Animated.View style={[styles.ball, ballPosition.getLayout()]} />
-    </Field>
+   
+      <Field
+        source={{
+          uri: 'https://img.freepik.com/free-vector/soccer-green-field_225004-1137.jpg?w=740&t=st=1691660062~exp=1691660662~hmac=f44980c3cd82ce465db7059e7b945e5f2f41b49e69f29bf80097a94e1f0b8e85',
+        }}
+        resizeMode="cover"
+      >
+        <TouchableOpacity onPress={moveBallToGoal} style={styles.button}>
+          <View >
+            {dataGame.game ? (
+              <Text style={styles.buttonText}>Start {`\n`}game</Text>
+            ) : (
+              <Text style={styles.buttonGameOver}>
+                Game Over {`\n`}Press to start
+              </Text>
+            )}
+          </View>
+        </TouchableOpacity>
+        <StyledText>Score:{dataGame.score}</StyledText>
+        <Goalkeeper xValueChange={goalkeeperValueChange} />
+        <Animated.View style={[styles.ball, ballPosition.getLayout()]} />
+       
+      </Field>
+    
+   
   );
 };
 
 const styles = StyleSheet.create({
+ 
   ball: {
     position: 'absolute',
     width: 30,

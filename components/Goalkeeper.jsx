@@ -19,7 +19,7 @@ const Goalkeeper = ({ xValueChange }) => {
   });
   return (
     <View
-      style={[styles.draggable, { left: position.x, top: 640}]}
+      style={[styles.draggable, { left: position.x, top: 600}]}
       {...panResponder.panHandlers}
     >
       <ImageBackground source={bgImage} style={styles.containerImg}>
